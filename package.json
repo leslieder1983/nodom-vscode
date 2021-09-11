@@ -1,0 +1,177 @@
+{
+    "name": "nodom",
+    "displayName": "nodom",
+    "description": "Nodom tooling for VS Code",
+    "keywords": [
+        "vscode",
+        "plugin",
+        "mvvm"
+    ],
+    "version": "0.0.3",
+    "publisher": "kyleslie",
+    "icon": "img/logo.png",
+    "engines": {
+        "vscode": "^1.55.1"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onLanguage:javascript",
+        "onLanguage:html",
+        "onLanguage:typescript"
+    ],
+    "main": "./extension.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://gitee.com/kyleslie/img.git"
+    },
+    "contributes": {
+        "grammars": [{
+                "path": "./syntaxes/string.json",
+                "scopeName": "template.nodom",
+                "injectTo": ["source.js"],
+                "embeddedLanguages": {
+                    "meta.embedded.*": "html"
+                },
+                "tokenTypes": {
+                    "nodom.template.string": "other"
+                }
+            }, {
+                "path": "./syntaxes/tsString.json",
+                "scopeName": "ts.nodom",
+                "injectTo": ["source.ts"],
+                "embeddedLanguages": {
+                    "meta.embedded.*": "html"
+                },
+                "tokenTypes": {
+                    "nodom.template.string": "other"
+                }
+            }
+
+        ],
+        "snippets": [{
+                "language": "html",
+                "path": "./snippets/nodom.json"
+            }, {
+                "language": "javascript",
+                "path": "./snippets/nodomjs.json"
+            },
+            {
+                "language": "typescript",
+                "path": "./snippets/nodomjs.json"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "nodom configuration",
+            "properties": {
+                "nodom.activationOnLanguage": {
+                    "type": "array",
+                    "default": [
+                        "xml",
+                        "php",
+                        "blade",
+                        "ejs",
+                        "jinja",
+                        "javascript",
+                        "javascriptreact",
+                        "typescript",
+                        "typescriptreact",
+                        "plaintext",
+                        "markdown",
+                        "vue",
+                        "liquid",
+                        "erb",
+                        "lang-cfml",
+                        "cfml",
+                        "HTML (EEx)",
+                        "HTML (Eex)",
+                        "plist"
+                    ],
+                    "description": "Set the languages that the extension will be activated.  e.g. [\"html\",\"xml\",\"php\"]. Use [\"*\"] to activate for all languages.",
+                    "scope": "resource"
+                },
+                "nodom.disableOnLanguage": {
+                    "type": "array",
+                    "default": [],
+                    "description": "Set the languages where the extension will be disabled.  e.g. [\"html\",\"xml\",\"php\"].",
+                    "scope": "resource"
+                },
+                "nodom.excludedTags": {
+                    "type": "array",
+                    "default": [
+                        "area",
+                        "base",
+                        "br",
+                        "col",
+                        "command",
+                        "embed",
+                        "hr",
+                        "img",
+                        "input",
+                        "keygen",
+                        "link",
+                        "meta",
+                        "param",
+                        "source",
+                        "track",
+                        "wbr"
+                    ],
+                    "description": "Set the tag list that would not be auto closed.",
+                    "scope": "resource"
+                },
+                "nodom.SublimeText3Mode": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Auto close tag when </ is typed, same as Sublime Text 3",
+                    "scope": "resource"
+                },
+                "nodom.enableAutoCloseTag": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to insert close tag automatically",
+                    "scope": "resource"
+                },
+                "nodom.enableAutoCloseSelfClosingTag": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to close self-closing tag automatically",
+                    "scope": "resource"
+                },
+                "nodom.insertSpaceBeforeSelfClosingTag": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Insert a space before the forward slash in a self-closing tag.",
+                    "scope": "resource"
+                },
+                "nodom.fullMode": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable both Visual Studio and Sublime Text mode",
+                    "scope": "resource"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "lint": "eslint .",
+        "pretest": "npm run lint",
+        "test": "node ./test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.55.0",
+        "@types/glob": "^7.1.3",
+        "@types/mocha": "^8.0.4",
+        "@types/node": "^12.11.7",
+        "eslint": "^7.19.0",
+        "glob": "^7.1.6",
+        "mocha": "^8.2.1",
+        "typescript": "^4.1.3",
+        "vscode-test": "^1.5.0"
+    },
+    "dependencies": {
+        "vsce": "^1.81.1"
+    }
+
+}

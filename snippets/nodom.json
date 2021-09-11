@@ -1,0 +1,104 @@
+{
+    "nodomInit": {
+        "prefix": "nodom",
+        "body": [
+            "<!DOCTYPE html>",
+            "<html lang=\"en\">",
+            "",
+            "<head>",
+            "  <meta charset=\"UTF-8\">",
+            "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">",
+            "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+            "  <title>${1:Document}</title>",
+            "</head>",
+            "",
+            "<body>",
+            "   <div id=\"${2:app}\"></div>",
+            "</body>",
+            "",
+            "<script type='module'>",
+            "    import{nodom} from '${3:./js/nodom.js}'",
+            "    import{${4:app}} from '${5:./modules/app.js}'",
+            "   nodom(${4:app},'div');",
+            "</script>",
+            "</html>"
+
+
+
+        ],
+        "description": "生成nodom初始化代码"
+    },
+    "nodomFunction": {
+        "prefix": "ndf",
+        "body": [
+            "${1:FunctionName}:function(dom,module,e,el){",
+            "   ${2}",
+            "},"
+        ],
+        "description": "生成nodom模板函数代码"
+    },
+    "onBeforeFirstRender": {
+        "prefix": "onBeforeFirstRender",
+        "body": [
+            "onBeforeFirstRender:function(module){",
+            "   ${1}",
+            "},"
+        ],
+        "description": "生成nodom onBeforeFirstRender函数"
+    },
+    "onBeforeRenderToHtml": {
+        "prefix": "onBeforeRenderToHtml",
+        "body": [
+            "onBeforeRenderToHtml:function(module){",
+            "   ${1}",
+            "},"
+        ],
+        "description": "生成nodom onBeforeRenderToHtml函数"
+    },
+    "onBeforeRender": {
+        "prefix": "onBeforeRender",
+        "body": [
+            "onBeforeRender:function(module){",
+            "   ${1}",
+            "},"
+        ],
+        "description": "生成nodom onBeforeRender函数"
+    },
+    "onBeforeRenderToHTML": {
+        "prefix": "onBeforeRenderToHTML",
+        "body": [
+            "onBeforeRenderToHTML:function(module){",
+            "   ${1}",
+            "},"
+        ],
+        "description": "生成nodom onBeforeRenderToHTML函数"
+    },
+    "onFirstRender": {
+        "prefix": "onFirstRender",
+        "body": [
+            "onFirstRender:function(module){",
+            "   ${1}",
+            "},"
+        ],
+        "description": "生成nodom onFirstRender函数"
+    },
+    "onRender": {
+        "prefix": "onRender",
+        "body": [
+            "onRender:function(module){",
+            "   ${1}",
+            "},"
+        ],
+        "description": "生成nodom onRender函数"
+    },
+    "onCreate": {
+        "prefix": "onCreate",
+        "body": [
+            "onCreate:function(module){",
+            "   ${1}",
+            "},"
+        ],
+        "description": "生成nodom onCreate函数"
+    }
+
+}
