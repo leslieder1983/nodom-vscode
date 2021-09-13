@@ -7,7 +7,7 @@
         "plugin",
         "mvvm"
     ],
-    "version": "0.0.3",
+    "version": "0.0.5",
     "publisher": "kyleslie",
     "icon": "img/logo.png",
     "engines": {
@@ -24,18 +24,18 @@
     "main": "./extension.js",
     "repository": {
         "type": "git",
-        "url": "git+https://gitee.com/kyleslie/img.git"
+        "url": "git+https://github.com/leslieder1983/nodom-vscode.git"
     },
     "contributes": {
         "grammars": [{
-                "path": "./syntaxes/string.json",
+                "path": "./syntaxes/nString.json",
                 "scopeName": "template.nodom",
                 "injectTo": ["source.js"],
                 "embeddedLanguages": {
                     "meta.embedded.*": "html"
                 },
                 "tokenTypes": {
-                    "nodom.template.string": "other"
+                    "meta.embedded.*": "other"
                 }
             }, {
                 "path": "./syntaxes/tsString.json",
@@ -45,7 +45,7 @@
                     "meta.embedded.*": "html"
                 },
                 "tokenTypes": {
-                    "nodom.template.string": "other"
+                    "meta.embedded.*": "other"
                 }
             }
 

@@ -1,6 +1,6 @@
 {
-    "scopeName": "ts.nodom",
-    "injectionSelector": "L:meta.class.ts",
+    "scopeName": "template.nodom",
+    "injectionSelector": "L:meta.class.js",
     "patterns": [{
             "include": "#expression"
         }, {
@@ -11,7 +11,7 @@
     "repository": {
         "return": {
             "match": "(?<=.*)return(?=[\\\"'`\\s]*)",
-            "name": "keyword.control.flow.ts"
+            "name": "keyword.control.flow.js"
         },
         "templateStr": {
             "begin": "template.*=\\s*`",
@@ -51,13 +51,13 @@
             "match": "([\\w\\-\\:]+)(\\s*\\=\\s*)(\\\".+?\\\"|\\'.+?\\'|\\`.+?\\`|(\\{{2}.+?\\}{2}(?!\\}))|(\\w+))|([\\w\\-]+)|(\\/.*)",
             "captures": {
                 "1": {
-                    "name": "entity.other.attribute-name.ts"
+                    "name": "entity.other.attribute-name.js"
                 },
                 "2": {
-                    "name": "keyword.operator.assignment.ts"
+                    "name": "keyword.operator.assignment.js"
                 },
                 "3": {
-                    "name": "punctuation.definition.string.end.ts"
+                    "name": "punctuation.definition.string.end.js"
                 },
                 "4": {
                     "patterns": [{
@@ -65,10 +65,10 @@
                     }]
                 },
                 "5": {
-                    "name": "punctuation.definition.string.end.ts"
+                    "name": "punctuation.definition.string.end.js"
                 },
                 "6": {
-                    "name": "entity.other.attribute-name.ts"
+                    "name": "entity.other.attribute-name.js"
                 },
                 "7":{
                     "patterns": [{
@@ -144,10 +144,10 @@
             "name": "md",
             "captures": {
                 "2": {
-                    "name": "entity.name.type.class.ts"
+                    "name": "entity.name.type.class.js"
                 },
                 "3": {
-                    "name": "entity.name.tag.ts"
+                    "name": "entity.name.tag.js"
                 }
             }
             
