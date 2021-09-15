@@ -13,6 +13,10 @@
             "match": "(?<=.*)return(?=[\\\"'`\\s]*)",
             "name": "keyword.control.flow.js"
         },
+        "keyword": {
+            "match": "(if|else|else if|while|switch|case|let|const|break|continue)",
+            "name": "keyword.control.conditional"
+        },
         "templateStr": {
             "begin": "template.*=\\s*`",
             "end": "`",
@@ -21,18 +25,20 @@
                 "include": "#comment"
             }, {
                 "include": "#doubleTag"
-            },  {
+            }, {
                 "include": "#text"
             }]
         },
         "expression": {
             "begin": "template.*\\{",
-            "end": "\\s*\\}",
+            "end": "\\s*\\}(?!\\s*\\w)",
 
             "patterns": [{
                 "include": "#start"
             }, {
                 "include": "#return"
+            }, {
+                "include": "#keyword"
             }]
         },
         "start": {
@@ -43,7 +49,7 @@
                 "include": "#comment"
             }, {
                 "include": "#doubleTag"
-            },  {
+            }, {
                 "include": "#text"
             }]
         },
@@ -70,7 +76,7 @@
                 "6": {
                     "name": "entity.other.attribute-name.js"
                 },
-                "7":{
+                "7": {
                     "patterns": [{
                         "include": "#module"
                     }]
@@ -78,7 +84,7 @@
             }
         },
         "doubleTag": {
-            "match":"(?<=.*)<([\\w-]*)(((\\{{2}.+\\}{2}(?!\\})|[\\s\\w=-]+|\\\".+?\\\"|\\'.+?\\'|\\`.+?\\`|(\/[^><\\s]*))*))>(((\\{{2}.+\\}{2}|.+?)*)<\/(.+)>|(?!.*<\/))" ,
+            "match": "(?<=.*)<([\\w-]*)(((\\{{2}.+\\}{2}(?!\\})|[\\s\\w=-]+|\\\".+?\\\"|\\'.+?\\'|\\`.+?\\`|(\/[^><\\s]*))*))>(((\\{{2}.+\\}{2}|.+?)*)<\/(.+)>|(?!.*<\/))",
             "name": "test",
             "captures": {
                 "1": {
@@ -91,7 +97,7 @@
                         "include": "#attributes"
                     }]
                 },
-                "5":{
+                "5": {
                     "patterns": [{
                         "include": "#module"
                     }]
@@ -150,7 +156,7 @@
                     "name": "entity.name.tag.js"
                 }
             }
-            
+
         },
         "text": {
             "match": "(\\w*(\\{{2})(.+?)(\\}{2}(?!\\}))\\w*|(e-\\w+)|(x-\\w+))",

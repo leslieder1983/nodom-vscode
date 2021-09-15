@@ -13,6 +13,10 @@
             "match": "(?<=.*)return(?=[\\\"'`\\s]*)",
             "name": "keyword.control.flow.ts"
         },
+        "keyword": {
+            "match": "(if|else|else if|while|switch|case|let|const|break|continue)",
+            "name": "keyword.control.conditional"
+        },
         "templateStr": {
             "begin": "template.*=\\s*`",
             "end": "`",
@@ -21,18 +25,20 @@
                 "include": "#comment"
             }, {
                 "include": "#doubleTag"
-            },  {
+            }, {
                 "include": "#text"
             }]
         },
         "expression": {
             "begin": "template.*\\{",
-            "end": "\\s*\\}",
+            "end": "\\s*\\}(?!\\s*\\w)",
 
             "patterns": [{
                 "include": "#start"
             }, {
                 "include": "#return"
+            }, {
+                "include": "#keyword"
             }]
         },
         "start": {
