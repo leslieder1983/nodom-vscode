@@ -42,7 +42,7 @@ function provideCompletionItems(document, position, ) {
 			//表达式
 		if (/\.$/g.test(lineText)) {
 			const Dependencies = [];
-			for (const item in Module.model) {
+			for (const item in Module.data) {
 				Dependencies.push(item);
 			}
 			return Dependencies.map(dep => {
@@ -57,7 +57,7 @@ function provideCompletionItems(document, position, ) {
 		 */
 		else if (/x\-\w+\=$/g.test(lineText)) {
 			const Dependencies = [];
-			for (const item in Module.model) {
+			for (const item in Module.data) {
 				Dependencies.push(item);
 			}
 			return Dependencies.map(dep => {

@@ -7,7 +7,7 @@
         "plugin",
         "mvvm"
     ],
-    "version": "0.0.5",
+    "version": "0.0.6",
     "publisher": "kyleslie",
     "icon": "img/logo.png",
     "engines": {
@@ -30,17 +30,7 @@
         "grammars": [{
                 "path": "./syntaxes/nString.json",
                 "scopeName": "template.nodom",
-                "injectTo": ["source.js"],
-                "embeddedLanguages": {
-                    "meta.embedded.*": "html"
-                },
-                "tokenTypes": {
-                    "meta.embedded.*": "other"
-                }
-            }, {
-                "path": "./syntaxes/tsString.json",
-                "scopeName": "ts.nodom",
-                "injectTo": ["source.ts"],
+                "injectTo": ["source.js","text.html.derivative","source.ts"],
                 "embeddedLanguages": {
                     "meta.embedded.*": "html"
                 },

@@ -48,19 +48,22 @@ export class MRepeat extends Module {
  ```js
  import {Module} from '../js/nodom.js'
 
-export class  extends Module {
+export class name extends Module {
 
-   model = {
+   data = {
        
    }
    methods = {
        
    }
-   template() {
+   template () {
        return `
            
        `
    }
+   css = [{
+       
+   }]
 
 }
  ```
@@ -83,16 +86,16 @@ nodom为事件、指令、表达式提供了代码提示。并补全代码。关
 
 * 当输入*x-*时，显示所有nodom支持的指令列表。
 * 当输入*e-*时，显示常用的nodom事件列表。
-* 在指令后输入**=**时，显示当前模块中model已定义的数据名。
+* 在指令后输入**=**时，显示当前模块中data已定义的数据名。
 * 在事件后输入**=**时，显示当前模块中methods内已定义的方法名。
-* 在当前模块中model已定义数据后,在任意地方输入**.**可快速生成表达式。
+* 在当前模块中data已定义数据后,在任意地方输入**.**可快速生成表达式。
 
 示例：
 
-如果model内有如下数据
+如果data内有如下数据
 
 ```js
-model = {
+data = {
 		num: 0,
 		AA:1,
 		add:'aa'
