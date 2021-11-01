@@ -19,11 +19,11 @@ function provideCompletionItems(document, position, ) {
 	}
 	// 简单匹配 class 6 event 22 field 4 TypeParameter 24 keyword 13 method 1 value 11
 	if (/\x\-$/g.test(lineText)) {
-		const dependencies = ['x-repeat', 'x-show', "x-if", "x-else","x-elseif","x-data","x-field", "x-module", "x-model", "x-route", "x-router","x-animation","x-plug","x-recur","x-validity"];
+		const dependencies = ['x-repeat', 'x-show', "x-if", "x-else", "x-elseif", "x-data", "x-field", "x-module", "x-model", "x-route", "x-router", "x-animation", "x-plug", "x-recur", "x-validity"];
 		return dependencies.map(dep => {
 			// vscode.CompletionItemKind 表示提示的类型 
 			let item = new vscode.CompletionItem(dep, 24);
-			 item.insertText = languages === 'html' ? dep : dep.substr(2);
+			item.insertText = languages === 'html' ? dep : dep.substr(2);
 			item.documentation = new vscode.MarkdownString(`nodom ${dep.substr(2)} directive`);
 			return item;
 		})
@@ -35,11 +35,10 @@ function provideCompletionItems(document, position, ) {
 			item.documentation = new vscode.MarkdownString(`nodom ${dep.substr(2)} event`);
 			return item;
 		})
-	} 
-	else{
+	} else {
 		const text = document.getText();
-			handlesDep(text);
-			//表达式
+		handlesDep(text);
+		//表达式
 		if (/\.$/g.test(lineText)) {
 			const Dependencies = [];
 			for (const item in Module.data) {
@@ -80,8 +79,8 @@ function provideCompletionItems(document, position, ) {
 				return item;
 			})
 		}
-	
-	} 
+
+	}
 
 }
 //处理模块依赖
@@ -138,7 +137,25 @@ function activate(context) {
 		insertAutoCloseTag(event);
 		deleteDot(event);
 	});
-	context.subscriptions.push(comp, auto);
+
+	let formatter = vscode.languages.registerDocumentFormattingEditProvider(['javascript'], {
+		provideDocumentFormattingEdits(document, options, token) {
+			// if (!enable) { return void 0 }
+			console.log(111111111);
+			const result = [];
+
+			const start = new vscode.Position(0, 0);
+			const end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
+			const range = new vscode.Range(start, end);
+			// let text = formatted(document.getText(range))
+			let text = document.getText(range);
+			// console.log(text);
+			result.push(new vscode.TextEdit(range, text));
+			// vscode.window.showInformationMessage('Formatted text succeeded!');
+			return result;
+		}
+	})
+	context.subscriptions.push(comp, auto, formatter);
 
 }
 /***

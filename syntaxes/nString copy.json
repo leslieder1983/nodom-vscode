@@ -8,11 +8,15 @@
         }
 
     ],
-    "patterns": [{
-        "include": "#start"
-    }],
     "repository": {
-
+        "return": {
+            "match": "(?<=.*)return(?=[\\\"'`\\s]*)",
+            "name": "keyword.control.flow"
+        },
+        "keyword": {
+            "match": "(if|else|else if|while|switch|case|let|const|break|continue)",
+            "name": "keyword.control.conditional"
+        },
         "templateStr": {
             "begin": "template.*=\\s*`",
             "end": "`",
@@ -28,7 +32,7 @@
         "expression": {
             "begin": "template.*\\{",
             "end": "\\s*\\}(?!\\s*\\w)",
-            "name": "meta.function",
+
             "patterns": [{
                 "include": "#start"
             }, {
@@ -38,19 +42,10 @@
             }]
         },
         "start": {
-            "comment":"开始重复会共享匹配值",
-            "begin": "(?<=(\\=|return)\\s*)`",
+            "begin": "`",
             "end": "`",
             "name": "meta.embedded.*",
             "patterns": [{
-                "//": "原生符号",
-                "include": "#origin1"
-            }, {
-                "include": "#origin2"
-            }, {
-                "//": "单行注释",
-                "include": "#singleComment"
-            }, {
                 "include": "#comment"
             }, {
                 "include": "#doubleTag"
@@ -58,57 +53,8 @@
                 "include": "#text"
             }]
         },
-        "origin1": {
-            "match": "(?<=.*)(\\$)(\\{)(.*)(\\})(?=.*)",
-            "name": "aaa",
-            "captures": {
-                "1": {
-                    "name": "punctuation.definition.template-expression.begin"
-                },
-                "2": {
-                    "name": "entity.name.function"
-                },
-                "3": {
-                    "name": "variable.other.readwrite"
-                },
-                "4": {
-                    "name": "entity.name.function"
-                }
-            }
-        },
-        "origin2": {
-            "begin": "(?<=.*)(\\$)(\\{)(.*)",
-            "end": "(.*)(\\})(?=.*)",
-            "contentName": "variable.other.readwrite",
-            "captures": {
-                "1": {
-                    "name": "punctuation.definition.template-expression.begin"
-                },
-                "2": {
-                    "name": "entity.name.function"
-                },
-                "3": {
-                    "name": "variable.other.readwrite"
-                },
-                "4": {
-                    "name": "variable.other.readwrite"
-                },
-                "5": {
-                    "name": "entity.name.function"
-                }
-            }
-        },
-        "return": {
-            "match": "(?<=.*)return(?=[\\\"'`\\s]*)",
-            "name": "keyword.control.flow"
-        },
-        "keyword": {
-            "match": "(if|else|else if|while|switch|case|let|const|break|continue)",
-            "name": "keyword.control.conditional"
-        },
         "attributes": {
-            "match": "([\\w\\-\\$]+)(\\s*\\=\\s*)(\\\".+?\\\"|\\'.+?\\'|\\`.+?\\`|(\\{{2}([^\\'\"\\`]+?|\\'.*?\\'|\\\".*?\\\"|\\`.*?\\`)+?\\}{2}(?!\\}))|(\\w+))|([\\w\\-]+)|(\\/.*)",
-            "name":"as",
+            "match": "([\\w\\-\\:]+)(\\s*\\=\\s*)(\\\".+?\\\"|\\'.+?\\'|\\`.+?\\`|(\\{{2}.+?\\}{2}(?!\\}))|(\\w+))|([\\w\\-]+)|(\\/.*)",
             "captures": {
                 "1": {
                     "name": "entity.other.attribute-name"
@@ -124,13 +70,13 @@
                         "include": "#text"
                     }]
                 },
-                "6": {
+                "5": {
                     "name": "punctuation.definition.string.end"
                 },
-                "7": {
+                "6": {
                     "name": "entity.other.attribute-name"
                 },
-                "8": {
+                "7": {
                     "patterns": [{
                         "include": "#module"
                     }]
@@ -138,7 +84,7 @@
             }
         },
         "doubleTag": {
-            "match": "(?<=.*)<([\\w-]*)(((\\{{2}([^\\'\"\\`]+|\\'.*\\'|\\\".*\\\"|\\`.*\\`)+\\}{2}(?!\\})|[\\s\\w\\$=-]+|\\\".+?\\\"|\\'.+?\\'|\\`.+?\\`|(\/[^><\\s]*))*))>(((\\{{2}.+\\}{2}|.+?)*)<\/(.+)>|(?!.*<\/))",
+            "match": "(?<=.*)<([\\w-]*)(((\\{{2}([^\\'\"\\`]+?|\\'.+?\\'|\\\".*?\\\"|\\`.*?\\`)+?\\}{2}(?!\\})|[\\s\\w=-]+|\\\".+?\\\"|\\'.+?\\'|\\`.+?\\`|(\/[^><\\s]*))*))>(((\\{{2}.+\\}{2}|.+?)*)<\/(.+)>|(?!.*<\/))",
             "name": "test",
             "captures": {
                 "1": {
@@ -213,18 +159,6 @@
                     "name": "punctuation.definition.comment"
                 },
                 "2": {
-                    "name": "punctuation.definition.comment"
-                }
-            }
-        },
-        "singleComment": {
-            "match": "(?<=.*)(<!--)(.*)(-->)(?=.*)",
-            "name": "comment.block",
-            "captures": {
-                "1": {
-                    "name": "punctuation.definition.comment"
-                },
-                "3": {
                     "name": "punctuation.definition.comment"
                 }
             }
