@@ -13,7 +13,6 @@ function provideCompletionItems(document, position, ) {
 	const line = document.lineAt(position);
 	// 只截取到光标位置
 	const lineText = line.text.substring(0, position.character);
-
 	if (!lineText.endsWith('x-') && !lineText.endsWith('e-') && !lineText.endsWith('=') && !lineText.endsWith('.')) {
 		return undefined;
 	}
@@ -38,10 +37,18 @@ function provideCompletionItems(document, position, ) {
 	} else {
 		const text = document.getText();
 		handlesDep(text);
+		const methods=[];
+		let b=Object.getPrototypeOf(Module);
+		let keys=Object.getOwnPropertyNames(b).concat(Object.keys(Module));
+		keys.forEach(v=>{
+			if(typeof Module[v] ==='function'&&['constructor','template'].indexOf(v)===-1){
+			    methods.push(v);
+			}
+		});
 		//表达式
 		if (/\.$/g.test(lineText)) {
 			const Dependencies = [];
-			for (const item in Module.data) {
+			for (const item in Module.data()) {
 				Dependencies.push(item);
 			}
 			return Dependencies.map(dep => {
@@ -56,7 +63,7 @@ function provideCompletionItems(document, position, ) {
 		 */
 		else if (/x\-\w+\=$/g.test(lineText)) {
 			const Dependencies = [];
-			for (const item in Module.data) {
+			for (const item in Module.data()) {
 				Dependencies.push(item);
 			}
 			return Dependencies.map(dep => {
@@ -69,11 +76,7 @@ function provideCompletionItems(document, position, ) {
 		 * e-开头的事件
 		 */
 		else if (/e\-\w+\=$/g.test(lineText)) {
-			const Dependencies = [];
-			for (const item in Module.methods) {
-				Dependencies.push(item);
-			}
-			return Dependencies.map(dep => {
+			return methods.map(dep => {
 				let item = new vscode.CompletionItem(dep, 11);
 				item.insertText = "\"" + dep + "\"";
 				return item;
@@ -107,7 +110,8 @@ function handlesDep(text) {
 			index++;
 		}
 	};
-	const obj = new Function('return ' + con)(); //模块对象
+
+	const obj = new Function('return class Module' + con)(); //模块对象
 	if (typeof obj == 'function') {
 		Module = Reflect.construct(obj, []);
 	}
