@@ -6,28 +6,23 @@
             "",
             "export class ${2} extends Module {",
             "",
-            "   data = {",
-            "       ${3}",
-            "   }",
-            "   methods = {",
-            "       ${4}",
+            "   data(){",
+            "     return {",
+            "      ${3}",
+            "     }",
             "   }",
             "   template () {",
             "       return `",
-            "       ${5}    ",
+            "       ${4}    ",
             "       `", 
             "   }",
-            "   css = [{",
-            "       ${6}",
-            "   }]",
-            "",
             "}"
     ]
 },
 "nodomFunction": {
     "prefix": "ndf",
     "body": [
-        "${1:FunctionName}:function(dom,module,e,el){",
+        "${1:FunctionName}(model,dom,NEvent,e){",
         "   ${2}",
         "},"
     ],
@@ -36,7 +31,7 @@
 "onBeforeFirstRender": {
     "prefix": "onBeforeFirstRender",
     "body": [
-        "onBeforeFirstRender:function(module){",
+        "onBeforeFirstRender(model){",
         "   ${1}",
         "},"
     ],
@@ -45,7 +40,7 @@
 "onBeforeRenderToHtml": {
     "prefix": "onBeforeRenderToHtml",
     "body": [
-        "onBeforeRenderToHtml:function(module){",
+        "onBeforeRenderToHtml(model){",
         "   ${1}",
         "},"
     ],
@@ -54,7 +49,7 @@
 "onBeforeRender": {
     "prefix": "onBeforeRender",
     "body": [
-        "onBeforeRender:function(module){",
+        "function(model){",
         "   ${1}",
         "},"
     ],
@@ -63,7 +58,7 @@
 "onBeforeRenderToHTML": {
     "prefix": "onBeforeRenderToHTML",
     "body": [
-        "onBeforeRenderToHTML:function(module){",
+        "onBeforeRenderToHTML(model){",
         "   ${1}",
         "},"
     ],
@@ -72,7 +67,7 @@
 "onFirstRender": {
     "prefix": "onFirstRender",
     "body": [
-        "onFirstRender:function(module){",
+        "onFirstRender(model){",
         "   ${1}",
         "},"
     ],
@@ -81,20 +76,10 @@
 "onRender": {
     "prefix": "onRender",
     "body": [
-        "onRender:function(module){",
+        "onRender(model){",
         "   ${1}",
         "},"
     ],
     "description": "生成nodom onRender函数"
-},
-"onCreate": {
-    "prefix": "onCreate",
-    "body": [
-        "onCreate:function(module){",
-        "   ${1}",
-        "},"
-    ],
-    "description": "生成nodom onCreate函数"
 }
-
 }
