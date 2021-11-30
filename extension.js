@@ -1,4 +1,11 @@
 const vscode = require('vscode');
+const path = require('path');
+const fs = require('fs');
+const nodom = require('./dist/nodom.cjs');
+const elements = [...nodom.DefineElementManager.elements.keys()].map((v) => {
+	return v.toLowerCase()
+});
+const directives = [...nodom.DirectiveManager.directiveTypes.keys()];
 let Module;
 /**
  * 自动提示实现
@@ -8,17 +15,19 @@ let Module;
  * @param {*} token 
  * @param {*} context 
  */
-function provideCompletionItems(document, position, ) {
+function provideCompletionItems(document, position, a, b, c) {
 	const languages = document.languageId;
 	const line = document.lineAt(position);
 	// 只截取到光标位置
 	const lineText = line.text.substring(0, position.character);
-	if (!lineText.endsWith('x-') && !lineText.endsWith('e-') && !lineText.endsWith('=') && !lineText.endsWith('.')) {
+	// console.log(document.uri,document.fileName);
+	// console.log(/(x-|e-|=|\.|\<)$/.test(lineText));
+	if (!/(x-|e-|=|\.|\<)$/.test(lineText)) {
 		return undefined;
 	}
 	// 简单匹配 class 6 event 22 field 4 TypeParameter 24 keyword 13 method 1 value 11
 	if (/\x\-$/g.test(lineText)) {
-		const dependencies = ['x-repeat', 'x-show', "x-if", "x-else", "x-elseif", "x-data", "x-field", "x-module", "x-model", "x-route", "x-router", "x-animation", "x-plug", "x-recur", "x-validity"];
+		const dependencies =directives.map(v=>'x-'+v);
 		return dependencies.map(dep => {
 			// vscode.CompletionItemKind 表示提示的类型 
 			let item = new vscode.CompletionItem(dep, 24);
@@ -34,17 +43,42 @@ function provideCompletionItems(document, position, ) {
 			item.documentation = new vscode.MarkdownString(`nodom ${dep.substr(2)} event`);
 			return item;
 		})
+	} else if (/\<$/g.test(lineText)) {
+		return elements.map(dep => {
+			let item = new vscode.CompletionItem(dep, 12);
+			item.insertText = new vscode.SnippetString(dep+'  cond=${1}>${0}</'+dep+'>') ;
+			item.documentation = new vscode.MarkdownString(`nodom ${dep.substr(2)} 自定义元素`);
+			return item;
+		})
+		// const text = document.getText();
+		// let regImp = /import[\s{}\w]*?from \s*['"]([^'"]*)['"][^\;\r\n]*/g;
+		// let res, con = [];
+		// while ((res = regImp.exec(text)) !== null) {
+		// 	con.push(res[1]);
+		// }
+		// console.log(con, res);
+		// if (con !== null) {
+		// 	con.forEach((v) => {
+		// 		console.log(path.resolve(path.dirname(document.fileName), v));
+		// 		let re = fs.readFileSync(path.resolve(path.dirname(document.fileName), v), 'utf-8');
+		// 		console.log(re);
+		// 	});
+		// 	// console.log(path.dirname(document.fileName),con);
+		// 	//path.join(path.dirname(document.fileName),v)
+		// 	// console.log(path.join(path.dirname(document.fileName),'./aa'));
+		// }
 	} else {
 		const text = document.getText();
 		handlesDep(text);
-		const methods=[];
-		let b=Object.getPrototypeOf(Module);
-		let keys=Object.getOwnPropertyNames(b).concat(Object.keys(Module));
-		keys.forEach(v=>{
-			if(typeof Module[v] ==='function'&&['constructor','template'].indexOf(v)===-1){
-			    methods.push(v);
+		const methods = [];
+		let b = Object.getPrototypeOf(Module);
+		let keys = Object.getOwnPropertyNames(b).concat(Object.keys(Module));
+		keys.forEach(v => {
+			if (typeof Module[v] === 'function' && ['constructor', 'template','data'].indexOf(v) === -1) {
+				methods.push(v);
 			}
 		});
+		console.log(methods,Module);
 		//表达式
 		if (/\.$/g.test(lineText)) {
 			const Dependencies = [];
@@ -135,7 +169,7 @@ function activate(context) {
 	let comp = vscode.languages.registerCompletionItemProvider(['javascript', 'typescript', 'html'], {
 		provideCompletionItems,
 		resolveCompletionItem
-	}, '-', '=', '.');
+	}, '-', '=', '.', '<');
 
 	let auto = vscode.workspace.onDidChangeTextDocument(event => {
 		insertAutoCloseTag(event);

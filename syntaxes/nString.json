@@ -39,7 +39,7 @@
         },
         "start": {
             "comment": "开始重复会共享匹配值",
-            "begin": "(?<=(\\=|return)\\s*)`",
+            "begin": "(?<=([\\w\\s]\\=|return)\\s*)`",
             "end": "`",
             "name": "meta.embedded.*",
             "patterns": [{

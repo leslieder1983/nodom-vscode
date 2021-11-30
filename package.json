@@ -7,7 +7,7 @@
         "plugin",
         "mvvm"
     ],
-    "version": "0.0.9",
+    "version": "0.0.10",
     "publisher": "kyleslie",
     "icon": "img/logo.png",
     "engines": {
@@ -27,10 +27,15 @@
         "url": "git+https://github.com/leslieder1983/nodom-vscode.git"
     },
     "contributes": {
-        "grammars": [{
+        "grammars": [
+            {
                 "path": "./syntaxes/nString.json",
                 "scopeName": "template.nodom",
-                "injectTo": ["source.js","text.html.derivative","source.ts"],
+                "injectTo": [
+                    "source.js",
+                    "text.html.derivative",
+                    "source.ts"
+                ],
                 "embeddedLanguages": {
                     "meta.embedded.*": "html"
                 },
@@ -38,12 +43,13 @@
                     "meta.embedded.*": "other"
                 }
             }
-
         ],
-        "snippets": [{
+        "snippets": [
+            {
                 "language": "html",
                 "path": "./snippets/nodom.json"
-            }, {
+            },
+            {
                 "language": "javascript",
                 "path": "./snippets/nodomjs.json"
             },
@@ -161,7 +167,8 @@
         "vscode-test": "^1.5.0"
     },
     "dependencies": {
-        "vsce": "^1.81.1"
+        "kayaks": "^1.0.8",
+        "vsce": "^1.81.1",
+        "vue": "^2.6.14"
     }
-
 }

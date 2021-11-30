@@ -42,7 +42,7 @@
         "body": [
             "onBeforeFirstRender(model){",
             "   ${1}",
-            "},"
+            "}"
         ],
         "description": "生成nodom onBeforeFirstRender函数"
     },
@@ -51,7 +51,7 @@
         "body": [
             "onBeforeRenderToHtml(model){",
             "   ${1}",
-            "},"
+            "}"
         ],
         "description": "生成nodom onBeforeRenderToHtml函数"
     },
@@ -60,7 +60,7 @@
         "body": [
             "function(model){",
             "   ${1}",
-            "},"
+            "}"
         ],
         "description": "生成nodom onBeforeRender函数"
     },
@@ -69,7 +69,7 @@
         "body": [
             "onBeforeRenderToHTML(model){",
             "   ${1}",
-            "},"
+            "}"
         ],
         "description": "生成nodom onBeforeRenderToHTML函数"
     },
@@ -78,7 +78,7 @@
         "body": [
             "onFirstRender(model){",
             "   ${1}",
-            "},"
+            "}"
         ],
         "description": "生成nodom onFirstRender函数"
     },
@@ -87,7 +87,7 @@
         "body": [
             "onRender(model){",
             "   ${1}",
-            "},"
+            "}"
         ],
         "description": "生成nodom onRender函数"
     }
