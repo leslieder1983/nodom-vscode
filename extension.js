@@ -1,7 +1,7 @@
 const vscode = require('vscode');
-const path = require('path');
-const fs = require('fs');
 const nodom = require('./dist/nodom.cjs');
+const nodomKeys=Reflect.ownKeys(nodom);
+const Md=nodom.Module;
 const elements = [...nodom.DefineElementManager.elements.keys()].map((v) => {
 	return v.toLowerCase()
 });
@@ -15,18 +15,19 @@ let Module;
  * @param {*} token 
  * @param {*} context 
  */
-function provideCompletionItems(document, position, a, b, c) {
+function provideCompletionItems(document, position,) {
 	const languages = document.languageId;
 	const line = document.lineAt(position);
 	// 只截取到光标位置
 	const lineText = line.text.substring(0, position.character);
-	// console.log(document.uri,document.fileName);
-	// console.log(/(x-|e-|=|\.|\<)$/.test(lineText));
+
+	
 	if (!/(x-|e-|=|\.|\<)$/.test(lineText)) {
 		return undefined;
 	}
 	// 简单匹配 class 6 event 22 field 4 TypeParameter 24 keyword 13 method 1 value 11
 	if (/\x\-$/g.test(lineText)) {
+		//指令
 		const dependencies =directives.map(v=>'x-'+v);
 		return dependencies.map(dep => {
 			// vscode.CompletionItemKind 表示提示的类型 
@@ -36,61 +37,93 @@ function provideCompletionItems(document, position, a, b, c) {
 			return item;
 		})
 	} else if (/\e\-$/g.test(lineText)) {
+		//事件
 		const Dependencies = ['e-click', 'e-touchstart', "e-mousemove", "e-mouseout", "e-mouseover", "e-change", "e-focus", "e-mousedown"];
 		return Dependencies.map(dep => {
-			let item = new vscode.CompletionItem(dep, 22);
+			// 22
+			let item = new vscode.CompletionItem(dep, 1);
 			item.insertText = languages === 'html' ? dep : dep.substr(2);
 			item.documentation = new vscode.MarkdownString(`nodom ${dep.substr(2)} event`);
 			return item;
 		})
 	} else if (/\<$/g.test(lineText)) {
-		return elements.map(dep => {
+		const text = document.getText();
+		let regImp = /import\s*([{}\w\s\,]+?)from\s*['"]([^'"]*?)['"]/g;
+		let res, con = [];
+		while ((res = regImp.exec(text)) !== null) {
+			let ans= res[1].trimEnd();
+			if(ans.includes(',')||ans.includes('{')){
+				//默认导出
+				if(/^[\w\s]+\,/.test(ans)){
+					let index=ans.indexOf(',');
+					con.push(ans.substring(0,index));
+					ans=ans.substr(index+1);
+				}
+				//匹配对象内属性
+			let reg=/{([\w\s\,]+?)}/;
+			if(reg.test(ans)){
+				let tmp =ans.match(reg);
+				if(tmp!==null){
+				con=con.concat(tmp[1].split(','));
+				}
+			}
+			}else{
+				con.push(ans.trim());
+			}
+			
+		}
+		//标签提示
+	let diy=	elements.map(dep => {
 			let item = new vscode.CompletionItem(dep, 12);
 			item.insertText = new vscode.SnippetString(dep+'  cond=${1}>${0}</'+dep+'>') ;
-			item.documentation = new vscode.MarkdownString(`nodom ${dep.substr(2)} 自定义元素`);
+			item.documentation = new vscode.MarkdownString(`nodom ${dep} 自定义元素`);
 			return item;
-		})
-		// const text = document.getText();
-		// let regImp = /import[\s{}\w]*?from \s*['"]([^'"]*)['"][^\;\r\n]*/g;
-		// let res, con = [];
-		// while ((res = regImp.exec(text)) !== null) {
-		// 	con.push(res[1]);
-		// }
-		// console.log(con, res);
-		// if (con !== null) {
-		// 	con.forEach((v) => {
-		// 		console.log(path.resolve(path.dirname(document.fileName), v));
-		// 		let re = fs.readFileSync(path.resolve(path.dirname(document.fileName), v), 'utf-8');
-		// 		console.log(re);
-		// 	});
-		// 	// console.log(path.dirname(document.fileName),con);
-		// 	//path.join(path.dirname(document.fileName),v)
-		// 	// console.log(path.join(path.dirname(document.fileName),'./aa'));
-		// }
+		});
+		if(con.length>0){
+			//过滤Nodom关键字
+			con=con.filter((value)=>{
+				if(nodomKeys.includes(value)){
+					return false;
+				}
+				return true;
+			});
+		
+			return con.map(key=>{
+				key=key.trim();
+				let item = new vscode.CompletionItem(key, 6);
+			item.insertText = new vscode.SnippetString(key+'>${1}</'+key+'>') ;
+			item.documentation = new vscode.MarkdownString(`nodom ${key} 模块`);
+			return item;
+			}).concat(diy);
+		}else{
+			return diy;
+		}
+	
+	
 	} else {
+		//提示数据
 		const text = document.getText();
 		handlesDep(text);
 		const methods = [];
-		let b = Object.getPrototypeOf(Module);
+		let b = Reflect.getPrototypeOf(Module);
 		let keys = Object.getOwnPropertyNames(b).concat(Object.keys(Module));
 		keys.forEach(v => {
-			if (typeof Module[v] === 'function' && ['constructor', 'template','data'].indexOf(v) === -1) {
+			if (typeof Module[v] === 'function' &&!['constructor', 'template','data'].includes(v)) {
 				methods.push(v);
 			}
 		});
-		console.log(methods,Module);
 		//表达式
 		if (/\.$/g.test(lineText)) {
 			const Dependencies = [];
 			for (const item in Module.data()) {
 				Dependencies.push(item);
-			}
+			};
 			return Dependencies.map(dep => {
 				let item = new vscode.CompletionItem(dep, 4);
 				item.insertText = "{{" + dep + "}}";
-				item.documentation = new vscode.MarkdownString(`nodom ${dep.substr(2)} expression`);
+				item.documentation = new vscode.MarkdownString(`Nodom ${dep.substr(2)} expression`);
 				return item;
-			})
+			});
 		}
 		/**
 		 * x-指令取得data
@@ -103,6 +136,7 @@ function provideCompletionItems(document, position, a, b, c) {
 			return Dependencies.map(dep => {
 				let item = new vscode.CompletionItem(dep, 11);
 				item.insertText = "{{" + dep + "}} ";
+				item.documentation = new vscode.MarkdownString(`Nodom Model数据： ${dep} `);
 				return item;
 			});
 		}
@@ -113,6 +147,7 @@ function provideCompletionItems(document, position, a, b, c) {
 			return methods.map(dep => {
 				let item = new vscode.CompletionItem(dep, 11);
 				item.insertText = "\"" + dep + "\"";
+				item.documentation = new vscode.MarkdownString(`Nodom 模块方法： ${dep} `);
 				return item;
 			})
 		}
@@ -127,8 +162,10 @@ function handlesDep(text) {
 	let str = text.substring(front, last);
 	let index = 0;
 	//去除继承关系
-	let con = str.substring(0, str.indexOf('extends')) + '{';
-	str = str.substring(str.indexOf('{') + 1);
+	// let con = str.substring(0, str.indexOf('extends')) + '{';
+	// str = str.substring(str.indexOf('{') + 1);
+		let con ='{';
+	str = str.substring(str.indexOf('{')+1);
 	let arr = ['{']
 	while (arr.length != 0) {
 		if (str[index] == '{') {
@@ -145,11 +182,12 @@ function handlesDep(text) {
 		}
 	};
 
-	const obj = new Function('return class Module' + con)(); //模块对象
-	if (typeof obj == 'function') {
-		Module = Reflect.construct(obj, []);
-	}
-
+	// const obj = new Function('return class A ' + con)(); //模块对象
+	// if (typeof obj == 'function') {
+	// 	Module = Reflect.construct(obj, []);
+	// }
+	let res=  eval('(function(){return class Exp extends Md'+con+'})()');
+	 Module=Reflect.construct(res,[]);
 }
 
 /**
@@ -160,7 +198,21 @@ function handlesDep(text) {
 function resolveCompletionItem() {
 	return null;
 }
+/**
+ * this.指向//Todo
+ */
+function provideItem(event){
+	if (!event.contentChanges[0]) {
+		return;
+	}
+	console.log(event);
 
+
+	let editor = vscode.window.activeTextEditor;
+	if (!editor) {
+		return;
+	}
+}
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -172,28 +224,29 @@ function activate(context) {
 	}, '-', '=', '.', '<');
 
 	let auto = vscode.workspace.onDidChangeTextDocument(event => {
+		// provideItem(event);
 		insertAutoCloseTag(event);
 		deleteDot(event);
 	});
+//Todo格式化
+	// let formatter = vscode.languages.registerDocumentFormattingEditProvider(['javascript'], {
+	// 	provideDocumentFormattingEdits(document,) {
+	// 		// if (!enable) { return void 0 }
+		
+	// 		const result = [];
 
-	let formatter = vscode.languages.registerDocumentFormattingEditProvider(['javascript'], {
-		provideDocumentFormattingEdits(document, options, token) {
-			// if (!enable) { return void 0 }
-			console.log(111111111);
-			const result = [];
-
-			const start = new vscode.Position(0, 0);
-			const end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
-			const range = new vscode.Range(start, end);
-			// let text = formatted(document.getText(range))
-			let text = document.getText(range);
-			// console.log(text);
-			result.push(new vscode.TextEdit(range, text));
-			// vscode.window.showInformationMessage('Formatted text succeeded!');
-			return result;
-		}
-	})
-	context.subscriptions.push(comp, auto, formatter);
+	// 		const start = new vscode.Position(0, 0);
+	// 		const end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
+	// 		const range = new vscode.Range(start, end);
+	// 		// let text = formatted(document.getText(range))
+	// 		let text = document.getText(range);
+	// 		// console.log(text);
+	// 		result.push(new vscode.TextEdit(range, text));
+	// 		// vscode.window.showInformationMessage('Formatted text succeeded!');
+	// 		return result;
+	// 	}
+	// })
+	context.subscriptions.push(comp, auto);
 
 }
 /***

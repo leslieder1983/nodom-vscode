@@ -1,4 +1,23 @@
-const Nodom = require('nodom3.3/dist/nodom.cjs.js');
-const elements=[...Nodom.DefineElementManager.elements.keys()].map((v)=>{return v.toLowerCase()});
-const directives = [...Nodom.DirectiveManager.directiveTypes.keys()];
-console.log(elements,directives);
+const nodom=require('../dist/nodom.cjs');
+const Md =nodom.Module;
+let a=` {
+    
+       data() {
+         return {
+          a:1,
+          add:{}
+         }
+       }
+       template() {
+           return \`
+           <if  cond='aa' x-animation=  e-change=></if>
+           \`
+       }
+       add(){
+    
+       }
+    }
+    `
+  let res=  eval('(function(){return class Exp extends Md'+a+'})()');
+  let r=Reflect.construct(res,[]);
+  console.log(r);
