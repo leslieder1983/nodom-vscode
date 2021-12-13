@@ -16,15 +16,8 @@
             "   <div id=\"${2:app}\"></div>",
             "</body>",
             "",
-            "<script type='module'>",
-            "    import{nodom} from '${3:./js/nodom.js}'",
-            "    import{${4:app}} from '${5:./modules/app.js}'",
-            "   nodom(${4:app},'div');",
-            "</script>",
+            "<script type='module' src='${3:./app.js}'></script>",
             "</html>"
-
-
-
         ],
         "description": "生成nodom初始化代码"
     },
@@ -32,7 +25,7 @@
         "prefix": "ndf",
         "body": [
             "${1:FunctionName}(model,dom,NEvent,e){",
-            "   ${2}",
+            "   ${0}",
             "},"
         ],
         "description": "生成nodom模板函数代码"
@@ -41,7 +34,7 @@
         "prefix": "onBeforeFirstRender",
         "body": [
             "onBeforeFirstRender(model){",
-            "   ${1}",
+            "   ${0}",
             "}"
         ],
         "description": "生成nodom onBeforeFirstRender函数"
@@ -50,7 +43,7 @@
         "prefix": "onBeforeRenderToHtml",
         "body": [
             "onBeforeRenderToHtml(model){",
-            "   ${1}",
+            "   ${0}",
             "}"
         ],
         "description": "生成nodom onBeforeRenderToHtml函数"
@@ -59,7 +52,7 @@
         "prefix": "onBeforeRender",
         "body": [
             "function(model){",
-            "   ${1}",
+            "   ${0}",
             "}"
         ],
         "description": "生成nodom onBeforeRender函数"
@@ -68,7 +61,7 @@
         "prefix": "onBeforeRenderToHTML",
         "body": [
             "onBeforeRenderToHTML(model){",
-            "   ${1}",
+            "   ${0}",
             "}"
         ],
         "description": "生成nodom onBeforeRenderToHTML函数"
@@ -77,7 +70,7 @@
         "prefix": "onFirstRender",
         "body": [
             "onFirstRender(model){",
-            "   ${1}",
+            "   ${0}",
             "}"
         ],
         "description": "生成nodom onFirstRender函数"
@@ -86,10 +79,28 @@
         "prefix": "onRender",
         "body": [
             "onRender(model){",
-            "   ${1}",
+            "   ${0}",
             "}"
         ],
         "description": "生成nodom onRender函数"
+    },
+    "beforeUnActive": {
+        "prefix": "beforeUnActive",
+        "body": [
+            "beforeUnActive(model){",
+            "   ${0}",
+            "}"
+        ],
+        "description": "生成nodom beforeUnActive函数"
+    },
+    "unActive": {
+        "prefix": "unActive",
+        "body": [
+            "unActive(model){",
+            "   ${0}",
+            "}"
+        ],
+        "description": "生成nodom unActive函数"
     }
 
 }

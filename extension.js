@@ -1,7 +1,7 @@
 const vscode = require('vscode');
 const nodom = require('./dist/nodom.cjs');
-const nodomKeys=Reflect.ownKeys(nodom);
-const Md=nodom.Module;
+const nodomKeys = Reflect.ownKeys(nodom);
+const Md = nodom.Module;
 const elements = [...nodom.DefineElementManager.elements.keys()].map((v) => {
 	return v.toLowerCase()
 });
@@ -15,20 +15,20 @@ let Module;
  * @param {*} token 
  * @param {*} context 
  */
-function provideCompletionItems(document, position,) {
+function provideCompletionItems(document, position, ) {
 	const languages = document.languageId;
 	const line = document.lineAt(position);
 	// 只截取到光标位置
 	const lineText = line.text.substring(0, position.character);
 
-	
+
 	if (!/(x-|e-|=|\.|\<)$/.test(lineText)) {
 		return undefined;
 	}
 	// 简单匹配 class 6 event 22 field 4 TypeParameter 24 keyword 13 method 1 value 11
 	if (/\x\-$/g.test(lineText)) {
 		//指令
-		const dependencies =directives.map(v=>'x-'+v);
+		const dependencies = directives.map(v => 'x-' + v);
 		return dependencies.map(dep => {
 			// vscode.CompletionItemKind 表示提示的类型 
 			let item = new vscode.CompletionItem(dep, 24);
@@ -51,55 +51,60 @@ function provideCompletionItems(document, position,) {
 		let regImp = /import\s*([{}\w\s\,]+?)from\s*['"]([^'"]*?)['"]/g;
 		let res, con = [];
 		while ((res = regImp.exec(text)) !== null) {
-			let ans= res[1].trimEnd();
-			if(ans.includes(',')||ans.includes('{')){
+			let ans = res[1].trimEnd();
+			if (ans.includes(',') || ans.includes('{')) {
 				//默认导出
-				if(/^[\w\s]+\,/.test(ans)){
-					let index=ans.indexOf(',');
-					con.push(ans.substring(0,index));
-					ans=ans.substr(index+1);
+				if (/^[\w\s]+\,/.test(ans)) {
+					let index = ans.indexOf(',');
+					con.push(ans.substring(0, index));
+					ans = ans.substr(index + 1);
 				}
-				//匹配对象内属性
-			let reg=/{([\w\s\,]+?)}/;
-			if(reg.test(ans)){
-				let tmp =ans.match(reg);
-				if(tmp!==null){
-				con=con.concat(tmp[1].split(','));
-				}
-			}
-			}else{
+				//TODO,先不匹配对象内属性
+				// let reg = /{([\w\s\,]+?)}/;
+				// if (reg.test(ans)) {
+				// 	let tmp = ans.match(reg);
+				// 	if (tmp !== null) {
+				// 		con = con.concat(tmp[1].split(','));
+				// 	}
+				// }
+			} else {
 				con.push(ans.trim());
 			}
-			
+
+		}
+		let registerModules=/registModule\s*\(\s*(\w+)\s*,/g;
+	
+		while ((res = registerModules.exec(text)) !== null) {
+				con.push( res[1].trim());
 		}
 		//标签提示
-	let diy=	elements.map(dep => {
+		let diy = elements.map(dep => {
 			let item = new vscode.CompletionItem(dep, 12);
-			item.insertText = new vscode.SnippetString(dep+'  cond=${1}>${0}</'+dep+'>') ;
+			item.insertText = new vscode.SnippetString(dep + '  cond=${1}>${0}</' + dep + '>');
 			item.documentation = new vscode.MarkdownString(`nodom ${dep} 自定义元素`);
 			return item;
 		});
-		if(con.length>0){
+		if (con.length > 0) {
 			//过滤Nodom关键字
-			con=con.filter((value)=>{
-				if(nodomKeys.includes(value)){
+			con = con.filter((value) => {
+				if (nodomKeys.includes(value)) {
 					return false;
 				}
 				return true;
 			});
-		
-			return con.map(key=>{
-				key=key.trim();
+
+			return con.map(key => {
+				key = key.trim();
 				let item = new vscode.CompletionItem(key, 6);
-			item.insertText = new vscode.SnippetString(key+'>${1}</'+key+'>') ;
-			item.documentation = new vscode.MarkdownString(`nodom ${key} 模块`);
-			return item;
+				item.insertText = new vscode.SnippetString(key + '>${1}</' + key + '>');
+				item.documentation = new vscode.MarkdownString(`nodom ${key} 模块`);
+				return item;
 			}).concat(diy);
-		}else{
+		} else {
 			return diy;
 		}
-	
-	
+
+
 	} else {
 		//提示数据
 		const text = document.getText();
@@ -108,7 +113,7 @@ function provideCompletionItems(document, position,) {
 		let b = Reflect.getPrototypeOf(Module);
 		let keys = Object.getOwnPropertyNames(b).concat(Object.keys(Module));
 		keys.forEach(v => {
-			if (typeof Module[v] === 'function' &&!['constructor', 'template','data'].includes(v)) {
+			if (typeof Module[v] === 'function' && !['constructor', 'template', 'data'].includes(v)) {
 				methods.push(v);
 			}
 		});
@@ -164,8 +169,8 @@ function handlesDep(text) {
 	//去除继承关系
 	// let con = str.substring(0, str.indexOf('extends')) + '{';
 	// str = str.substring(str.indexOf('{') + 1);
-		let con ='{';
-	str = str.substring(str.indexOf('{')+1);
+	let con = '{';
+	str = str.substring(str.indexOf('{') + 1);
 	let arr = ['{']
 	while (arr.length != 0) {
 		if (str[index] == '{') {
@@ -186,8 +191,8 @@ function handlesDep(text) {
 	// if (typeof obj == 'function') {
 	// 	Module = Reflect.construct(obj, []);
 	// }
-	let res=  eval('(function(){return class Exp extends Md'+con+'})()');
-	 Module=Reflect.construct(res,[]);
+	let res = eval('(function(){return class Exp extends Md' + con + '})()');
+	Module = Reflect.construct(res, []);
 }
 
 /**
@@ -201,7 +206,7 @@ function resolveCompletionItem() {
 /**
  * this.指向//Todo
  */
-function provideItem(event){
+function provideItem(event) {
 	if (!event.contentChanges[0]) {
 		return;
 	}
@@ -228,11 +233,11 @@ function activate(context) {
 		insertAutoCloseTag(event);
 		deleteDot(event);
 	});
-//Todo格式化
+	//Todo格式化
 	// let formatter = vscode.languages.registerDocumentFormattingEditProvider(['javascript'], {
 	// 	provideDocumentFormattingEdits(document,) {
 	// 		// if (!enable) { return void 0 }
-		
+
 	// 		const result = [];
 
 	// 		const start = new vscode.Position(0, 0);

@@ -38,14 +38,14 @@ export class MRepeat extends Module {
 | Nodom                |         生成Nodom初始化代码（只有在HTML文件中有效）          |
 | ncm                  |                     生成Nodom模块类代码                      |
 | ndf                  |                     生成methods内的函数                      |
-| onCreate             |                 生成methods内的onCreate函数                  |
 | onBeforeFirstRender  | Generate the Nodom onBeforeFirstRender function(生成Nodom onBeforeFirstRender函数) |
 | onBeforeRenderToHtml | Generate the Nodom onBeforeRenderToHtml function(生成Nodom onBeforeRenderToHtml函数) |
 | onBeforeRender       | Generate the Nodom onBeforeRender function(生成Nodom onBeforeRender函数) |
 | onBeforeRenderToHTML | Generate the Nodom onBeforeRenderToHTML function(生成Nodom onBeforeRenderToHTML函数) |
 | onFirstRender        | Generate the Nodom onFirstRender function(生成Nodom onFirstRender函数) |
 | onRender             | Generate the Nodom onRender function(生成Nodom onRender函数) |
-| onReceive            | Generate the Nodom onReceive function(生成Nodom onReceive函数) |
+| beforeUnActive       | Generate the Nodom beforeUnActive function(生成Nodom beforeUnActive函数) |
+| unActive            | Generate the Nodom unActive function(生成Nodom unActive函数) |
 
 > 比如初始化一个Nodom模块，在js/ts文件内输入ncm,待提示框显示，选择ncm(按下tab或回车键)。即可生成如下代码：
 
