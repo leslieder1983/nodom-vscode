@@ -26,7 +26,7 @@
     "body": [
         "${1:FunctionName}(model,dom,NEvent,e){",
         "   ${0}",
-        "},"
+        "}"
     ],
     "description": "生成nodom模板函数代码"
 },
