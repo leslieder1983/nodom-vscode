@@ -117,7 +117,8 @@
                     "name": "keyword.operator.assignment"
                 },
                 "3": {
-                    "name": "punctuation.definition.string.end"
+                    "name1": "punctuation.definition.string.end",
+                    "name": "string.quoted.double"
                 },
                 "4": {
                     "patterns": [{
@@ -125,7 +126,8 @@
                     }]
                 },
                 "6": {
-                    "name": "punctuation.definition.string.end"
+                    "name1": "punctuation.definition.string.end",
+                    "name": "string.quoted.double"
                 },
                 "7": {
                     "name": "entity.other.attribute-name"
@@ -138,7 +140,7 @@
             }
         },
         "doubleTag": {
-            "match": "(?<=.*)<([\\w-]*)(((\\{{2}([^\\'\"\\`\\}]+|\\'.*\\'|\\\".*\\\"|\\`.*\\`)+\\}{2}(?!\\})|[\\s\\w\\$=-]+|\\\".*?\\\"|\\'.*?\\'|\\`.*?\\`|(\/[^><\\s]*))*))>(((\\{{2}.+\\}{2}|.*?)*)<\/(.+)>|(?!.*<\/))",
+            "match": "(?<=.*)<([\\w-]*)(((\\{{2}([^\\'\"\\`\\}]+|\\'.*\\'|\\\".*\\\"|\\`.*\\`)+\\}{2}(?!\\})|[\\s\\w\\$=-]+|\\\".*?\\\"|\\'.*?\\'|\\`.*?\\`|(\/[^><\\s]*))*))>(((\\{{2}.+\\}{2}|.*)*)<\/(.+)>|(?!.*<\/))",
             "name": "test",
             "captures": {
                 "1": {
