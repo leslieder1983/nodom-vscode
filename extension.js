@@ -1,7 +1,11 @@
 const vscode = require('vscode');
 const nodom = require('./dist/nodom.cjs');
 const nodomKeys = Reflect.ownKeys(nodom);
-const Md = nodom.Module;
+const fs = require('fs/promises');
+const path = require('path');
+//new function 需要 不可删除
+const NM = nodom.Module;
+console.log(NM);
 const elements = [...nodom.DefineElementManager.elements.keys()].map((v) => {
 	return v.toLowerCase()
 });
@@ -47,6 +51,7 @@ function provideCompletionItems(document, position, ) {
 			return item;
 		})
 	} else if (/\<$/g.test(lineText)) {
+		//查找默认导出
 		const text = document.getText();
 		let regImp = /import\s*([{}\w\s\,]+?)from\s*['"]([^'"]*?)['"]/g;
 		let res, con = [];
@@ -59,23 +64,15 @@ function provideCompletionItems(document, position, ) {
 					con.push(ans.substring(0, index));
 					ans = ans.substr(index + 1);
 				}
-				//TODO,先不匹配对象内属性
-				// let reg = /{([\w\s\,]+?)}/;
-				// if (reg.test(ans)) {
-				// 	let tmp = ans.match(reg);
-				// 	if (tmp !== null) {
-				// 		con = con.concat(tmp[1].split(','));
-				// 	}
-				// }
 			} else {
 				con.push(ans.trim());
 			}
 
 		}
-		let registerModules=/registModule\s*\(\s*(\w+)\s*,/g;
-	
+		let registerModules = /registModule\s*\(\s*(\w+)\s*,/g;
+
 		while ((res = registerModules.exec(text)) !== null) {
-				con.push( res[1].trim());
+			con.push(res[1].trim());
 		}
 		//标签提示
 		let diy = elements.map(dep => {
@@ -191,7 +188,7 @@ function handlesDep(text) {
 	// if (typeof obj == 'function') {
 	// 	Module = Reflect.construct(obj, []);
 	// }
-	let res = eval('(function(){return class Exp extends Md' + con + '})()');
+	let res = eval('(function(){return class Exp extends NM' + con + '})()');
 	Module = Reflect.construct(res, []);
 }
 
@@ -203,21 +200,7 @@ function handlesDep(text) {
 function resolveCompletionItem() {
 	return null;
 }
-/**
- * this.指向//Todo
- */
-function provideItem(event) {
-	if (!event.contentChanges[0]) {
-		return;
-	}
-	console.log(event);
 
-
-	let editor = vscode.window.activeTextEditor;
-	if (!editor) {
-		return;
-	}
-}
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -234,26 +217,50 @@ function activate(context) {
 		deleteDot(event);
 	});
 	//Todo格式化
-	// let formatter = vscode.languages.registerDocumentFormattingEditProvider(['javascript'], {
-	// 	provideDocumentFormattingEdits(document,) {
-	// 		// if (!enable) { return void 0 }
 
-	// 		const result = [];
+	// 创建module
+	const createModule = vscode.commands.registerCommand(
+		'createModule',
+		(uri) => {
+			// 如果右键点击文件夹，这里就是文件夹的路径
+			const dirPath = uri.fsPath;
+			// 需要实现一个生成index.ts文件的函数
+			genModule(dirPath);
+		}
+	);
 
-	// 		const start = new vscode.Position(0, 0);
-	// 		const end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
-	// 		const range = new vscode.Range(start, end);
-	// 		// let text = formatted(document.getText(range))
-	// 		let text = document.getText(range);
-	// 		// console.log(text);
-	// 		result.push(new vscode.TextEdit(range, text));
-	// 		// vscode.window.showInformationMessage('Formatted text succeeded!');
-	// 		return result;
-	// 	}
-	// })
-	context.subscriptions.push(comp, auto);
+
+	// 注册到监听队列中
+	context.subscriptions.push(comp, auto, createModule);
 
 }
+
+function genModule(url) {
+	vscode.window.showInputBox({ // 这个对象中所有参数都是可选参数
+		ignoreFocusOut: true, // 默认false，设置为true时鼠标点击别的地方输入框不会消失
+		placeHolder: '输入模块名', // 在输入框内的提示信息
+		prompt: '创建模块名同名模块', // 在输入框下方的提示信息
+	}).then(function (msg) {
+		let str = `import {Module} from 'nodom3';
+
+export default class ${msg} extends Module {
+    data() {
+        return {
+
+        }
+    }
+    template(props) {
+        return \`
+				<div>
+		
+				</div>
+			   \`
+    }
+}`
+		fs.writeFile(path.join(url, msg + '.js'), str, (err) => console.log(err));
+	});
+}
+
 /***
  * 处理表达式的点
  */

@@ -44,6 +44,21 @@
                 }
             }
         ],
+        "commands": [
+            {
+                "command": "createModule",
+                "title": "Nodom Create Module"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "command": "createModule",
+                    "group": "1_modification",
+                    "when": "explorerResourceIsFolder"
+                }
+            ]
+        },
         "snippets": [
             {
                 "language": "html",
@@ -168,7 +183,7 @@
     },
     "dependencies": {
         "kayaks": "^1.0.8",
-        "vsce": "^1.81.1",
-        "vue": "^2.6.14"
+        "nodom3": "^0.1.9",
+        "vsce": "^1.81.1"
     }
 }

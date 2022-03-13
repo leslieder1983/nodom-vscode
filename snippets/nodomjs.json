@@ -2,7 +2,7 @@
     "nodom": {
         "prefix": "ncm",
         "body": [
-            "import {Module} from '${1:../js/nodom.js}'",
+            "import {Module} from '${1:nodom3}'",
             "",
             "export default class ${2:Hello} extends Module {",
             "",
